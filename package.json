@@ -1,0 +1,23 @@
+{
+  "name": "timetracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/namahu/timetracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/namahu/timetracker/issues"
+  },
+  "homepage": "https://github.com/namahu/timetracker#readme",
+  "devDependencies": {
+    "@types/google-apps-script": "^1.0.37"
+  }
+}
