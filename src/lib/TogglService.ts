@@ -45,7 +45,7 @@ class TogglService_ {
             method: method,
             contentType: "application/json",
             headers: {
-                Authorization: "Basic " + this.token + ":api_token"
+                Authorization: "Basic " + Utilities.base64Encode(this.token + ":api_token")
             },
             muteHttpExceptions: true
         }
