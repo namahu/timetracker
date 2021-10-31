@@ -1,9 +1,18 @@
+export type TodoistLabel = {
+    id: number;
+    name: string;
+    color: number;
+    order: number;
+    favorite: boolean;
+}
+
 const createTodoistInstance = (token: string) => {
     return new TodoistService_(token);
 };
 
 class TodoistService_ {
-    private baseURL = "https://api.todoist.com/sync/v8";
+    private syncAPIBaseURL = "https://api.todoist.com/sync/v8";
+    private restAPIBaseURL = "https://api.todoist.com/rest/v1";
 
     private token: string;
 
@@ -33,8 +42,21 @@ class TodoistService_ {
         return res.getContentText("UTF-8");
     }
 
+    getAllLabel = (): TodoistLabel[] => {
+        const endPoint = this.syncAPIBaseURL
+            + "/labels";
+        
+        const contentText = this.request_(endPoint, "get");
+        return JSON.parse(contentText);
+    }
+
+    getLabelByLabelID = (labelID: number[]) => {
+        const allLabel = this.getAllLabel();
+        return allLabel.filter(label => labelID.includes(label.id));
+    }
+
     getProjectByProjectID = (projectID: number) => {
-        const endPoint = this.baseURL
+        const endPoint = this.syncAPIBaseURL
             + "/projects/get_data?project_id="
             + projectID;
         
