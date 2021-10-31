@@ -1,3 +1,5 @@
+import { Properties } from "../TimeTracker";
+
 type TogglProject = {
     id: number;
     wid: number;
@@ -9,7 +11,11 @@ type TogglProject = {
     at: string;
 };
 
-class TogglService {
+const createTogglInstance = (token: string, properties: Properties) => {
+    return new TogglService_(token, properties);
+};
+
+class TogglService_ {
     private baseURL = "https://api.track.toggl.com/api/v8";
 
     private token: string;
@@ -59,4 +65,4 @@ class TogglService {
     }
 };
 
-export { TogglService };
+export { createTogglInstance };
