@@ -11,6 +11,30 @@ type TogglProject = {
     at: string;
 };
 
+export type TimeEntryProps = {
+    at?: string;
+    billable?: boolean;
+    created_with: string;
+    description: string;
+    duration?: number;
+    duronly?: boolean;
+    id?: number;
+    pid: number;
+    start?: string;
+    stop?: string;
+    tags?: string[];
+    tid?: number;
+    wid?: number;
+}
+
+export type TimeEntry = {
+    time_entry: TimeEntryProps;
+}
+
+export type TimeEntryResponse = {
+    data: TimeEntryProps;
+}
+
 const createTogglInstance = (token: string, properties: Properties) => {
     return new TogglService_(token, properties);
 };
@@ -45,7 +69,8 @@ class TogglService_ {
             method: method,
             contentType: "application/json",
             headers: {
-                Authorization: "Basic " + Utilities.base64Encode(this.token + ":api_token")
+                Authorization: "Basic " + Utilities.base64Encode(this.token + ":api_token"),
+                "Content-type": "application/json"
             },
             muteHttpExceptions: true
         }
@@ -62,6 +87,13 @@ class TogglService_ {
     getProjectByProjectName = (name: string): TogglProject[] => {
         const allProject: TogglProject[] = this.getALLProject_();
         return allProject.filter(project => project.name === name);
+    }
+
+    startTimeEntry = (payload: TimeEntry) => {
+        const endPoint = "/time_entries/start"
+        
+        const contentText = this.request_(endPoint, "post", payload);
+        return JSON.parse(contentText);
     }
 };
 

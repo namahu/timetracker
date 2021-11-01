@@ -43,7 +43,7 @@ class TodoistService_ {
     }
 
     getAllLabel = (): TodoistLabel[] => {
-        const endPoint = this.syncAPIBaseURL
+        const endPoint = this.restAPIBaseURL
             + "/labels";
         
         const contentText = this.request_(endPoint, "get");
@@ -56,8 +56,8 @@ class TodoistService_ {
     }
 
     getProjectByProjectID = (projectID: number) => {
-        const endPoint = this.syncAPIBaseURL
-            + "/projects/get_data?project_id="
+        const endPoint = this.restAPIBaseURL
+            + "/projects/"
             + projectID;
         
         const contentText = this.request_(endPoint, "get");
