@@ -95,6 +95,14 @@ class TogglService_ {
         const contentText = this.request_(endPoint, "post", payload);
         return JSON.parse(contentText);
     }
+
+    stopTimeEntry = (timeEntryID: string) => {
+        const endPoint = "/time_entries/"
+            + timeEntryID
+            + "/stop";
+        const contentText = this.request_(endPoint, "put");
+        return JSON.parse(contentText);
+    };
 };
 
 export { createTogglInstance };

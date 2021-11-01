@@ -6,8 +6,10 @@ export type Properties = {
     TODOIST_API_KEY: string;
     TOGGL_API_KEY: string;
     TOGGL_WORKSPACE_ID: string;
+    TIMEENTRY_ID: string;
     TIMETRACKING_LABEL_ID: string;
-    TIMETRACKING_SECTION_ID: number;
+    TIMETRACKING_SECTION_ID: string;
+    TRAKING_TASK_ID: string;
 };
 
 type TodoistWebHookEventData = {
@@ -36,20 +38,30 @@ const doPost = (event: GoogleAppsScript.Events.DoPost) => {
 
     const toggl = createTogglInstance(properties.TOGGL_API_KEY, properties);
 
-    if (contents.event_name === "item:completed") {
-        // EventのタスクIDとスクリプトプロパティのタスクIDを比較
-        // 一致していたらtoggl trackへの計測停止リクエスト作成と送信
-        // スクリプトプロパティのタスクIDをnullにする
-
-        return ask();
-    }
-
     const hasTimetrackingLableID = checkExistsTimetrackingLabelID(contents.event_data.labels, properties);
 
-    if (!hasTimetrackingLableID) {
+    if (!hasTimetrackingLableID || contents.event_name === "item:completed") {
         // EventのタスクIDとスクリプトプロパティのタスクIDを比較
         // 一致していたらtoggl trackへの計測停止リクエスト作成と送信
         // スクリプトプロパティのタスクIDをnullにする
+        const isTrackingTask = checkEventTaskTimeTrackingTaskWithSame(
+            contents.event_data.id,
+            properties.TRAKING_TASK_ID
+        );
+
+        if (isTrackingTask) {
+            toggl.stopTimeEntry(properties.TIMEENTRY_ID);
+
+            scriptProperties.setProperties({
+                "TRAKING_TASK_ID": "empty",
+                "TIMEENTRY_ID": ""
+            });
+        }
+
+        if (hasTimetrackingLableID) {
+            // タスクから「TimeTracking」のラベルを削除する
+        }
+
 
         return ask();
     }
@@ -95,6 +107,22 @@ const doPost = (event: GoogleAppsScript.Events.DoPost) => {
 
     return ask();
 }
+
+/**
+ * リクエストで受信したタスクが時間計測中のタスクかどうかを調べる
+ * 
+ * @param { number }eventTaskID - イベント内のタスクID 
+ * @param  { string } timeTrackingTaskID - 計測中のタスクID
+ * @returns { boolean } - 比較結果
+ */
+const checkEventTaskTimeTrackingTaskWithSame = (
+    eventTaskID: number,
+    timeTrackingTaskID: string | "empty"
+): boolean => {
+    return timeTrackingTaskID === "empty"
+        ? false
+        : eventTaskID === Number(timeTrackingTaskID);
+};
 
 /**
  * Todoistタスクのラベルに「TimeTracking」が設定されているかを調べる
