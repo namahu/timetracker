@@ -1,6 +1,6 @@
 import { ITodoistService } from "../lib/TodoistService";
 import { ITogglService, TimeEntryProps, TimeEntryResponse } from "../lib/TogglService";
-import { ask, checkEventTaskTimeTrackingTaskWithSame, checkExistsTimetrackingLabelID, Properties, TodoistWebHookEvent } from "../TimeTracker";
+import { ask, checkEventTaskTimeTrackingTaskWithSame, checkExistsTimetrackingLabelID, checkHasTimeTrackingSectionId, Properties, TodoistWebHookEvent } from "../TimeTracker";
 
 const handleItemUpdated = (
     todoist: ITodoistService,
@@ -9,8 +9,9 @@ const handleItemUpdated = (
     properties: Properties,
     scriptProperties: GoogleAppsScript.Properties.Properties
 ) => {
-    const hasTimetrackingLableID: boolean = checkExistsTimetrackingLabelID(
-        event.event_data.labels, properties
+    const hasTimetrackingSectionID = checkHasTimeTrackingSectionId(
+        event.event_data.section_id,
+        properties
     );
 
     const isTrackingTask: boolean = checkEventTaskTimeTrackingTaskWithSame(
@@ -18,16 +19,15 @@ const handleItemUpdated = (
         properties.TRAKING_TASK_ID
     );
 
-    if (hasTimetrackingLableID && isTrackingTask)
-        return ask({ ok: false });
+    if (hasTimetrackingSectionID && isTrackingTask) return ask({ ok: false });
 
-    if (!hasTimetrackingLableID && !isTrackingTask) 
+    if (!hasTimetrackingSectionID && !isTrackingTask) 
         return ask({
             ok: false,
             message: "Not tracking task."
         });
 
-    if (!hasTimetrackingLableID && isTrackingTask)
+    if (!hasTimetrackingSectionID && isTrackingTask)
         return stopTimeTracking_(
             toggl,
             properties,

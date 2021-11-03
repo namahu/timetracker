@@ -5,6 +5,7 @@ import { createTogglInstance, TimeEntry, TimeEntryProps, TimeEntryResponse } fro
 
 export type Properties = {
     CREATED_WITH_PROP: string;
+    TASK_DONE_SECTION_ID: string;
     TODOIST_API_KEY: string;
     TOGGL_API_KEY: string;
     TOGGL_WORKSPACE_ID: string;

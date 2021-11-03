@@ -28,11 +28,7 @@ const handleItemCompleted = (
 
     
 
-    return deleteTimeTrackingLabelFromTask_(
-        todoist,
-        event,
-        properties
-    );
+    return ask({ ok: true });
 
 };
 
