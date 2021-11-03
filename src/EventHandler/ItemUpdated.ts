@@ -56,16 +56,10 @@ const startTimeTracking_ = (
     const todoistLabels = todoist.getLabelByLabelID(event.event_data.labels);
     const labelName: string[] = todoistLabels.length === 1
         ? []
-        : todoistLabels.filter(label => {
-            return label.id !== Number(properties.TIMETRACKING_LABEL_ID)
-        }).map(label => label.name);
+        : todoistLabels.map(label => label.name);
 
     const togglProject = toggl.getProjectByProjectName(project.name);
     console.log(togglProject);
-
-    if (!togglProject.length) {
-        // 計測始める前に、toggl側にプロジェクトを作成する
-    }
 
     const payload: TimeEntryProps = {
         pid: togglProject[0].id,
