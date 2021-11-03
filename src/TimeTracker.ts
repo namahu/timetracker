@@ -11,7 +11,7 @@ export type Properties = {
     TOGGL_WORKSPACE_ID: string;
     TIMEENTRY_ID: string;
     TIMETRACKING_LABEL_ID: string;
-    TIMETRACKING_SECTION_ID: string;
+    TIMETRACKING_SECTION_IDS: number[];
     TRAKING_TASK_ID: string;
 };
 
@@ -102,7 +102,7 @@ const checkExistsTimetrackingLabelID = (labels: number[], properties: Properties
  * @returns { boolean } - チェック結果
  */
 const checkHasTimeTrackingSectionId = (sectionID: number, properties: Properties): boolean => {
-    return sectionID === Number(properties.TIMETRACKING_SECTION_ID);
+    return properties.TIMETRACKING_SECTION_IDS.includes(sectionID);
 };
 
 /**
