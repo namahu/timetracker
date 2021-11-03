@@ -35,11 +35,17 @@ export type TimeEntryResponse = {
     data: TimeEntryProps;
 }
 
+export interface ITogglService {
+    getProjectByProjectName: (name: string) => TogglProject[];
+    startTimeEntry: (payload: TimeEntry) => TimeEntryResponse;
+    stopTimeEntry: (timeEntryID: string) => any;
+}
+
 const createTogglInstance = (token: string, properties: Properties) => {
     return new TogglService_(token, properties);
 };
 
-class TogglService_ {
+class TogglService_ implements ITogglService {
     private baseURL = "https://api.track.toggl.com/api/v8";
 
     private token: string;
@@ -89,7 +95,7 @@ class TogglService_ {
         return allProject.filter(project => project.name === name);
     }
 
-    startTimeEntry = (payload: TimeEntry) => {
+    startTimeEntry = (payload: TimeEntry): TimeEntryResponse => {
         const endPoint = "/time_entries/start"
         
         const contentText = this.request_(endPoint, "post", payload);
